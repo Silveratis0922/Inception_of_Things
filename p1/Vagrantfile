@@ -1,45 +1,40 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
 Vagrant.configure("2") do |config|
-  config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-    vb.gui = false
-    #Change le default machine folder de la commande "VBoxManage list systemproperties"
-    #Pour remettre par defaut a 42 : VBoxManage setproperty machinefolder $HOME/Virtualbox\ Vms
-    vb.customize ["setproperty", "machinefolder", "#{ENV['HOME']}/sgoinfre"]
+
+  controller_ip = "192.168.56.110"
+  agent_ip = "192.168.56.111"
+  k3s_port = "6443"
+  k3s_url = "https://#{controller_ip}:#{k3s_port}"
   
-  #   # Customize the amount of memory on the VM:
-    vb.memory = "1024"
-    vb.cpus = 2
+  shared_dir = "/vagrant/shared"
+  k3s_token = "token"
+
+  # Common script executed on all VMs
+  config.vm.provision "shell", path: "scripts/common_setup.sh"
+
+  config.vm.define "ablevinS" do |control|
+    control.vm.hostname = "ablevinS"
+    control.vm.box = "debian/bookworm64"
+    control.vm.box_version = "12.20250126.1"
+    control.vm.network "private_network", ip: controller_ip
+    control.vm.provider "virtualbox" do |vb|
+      vb.name = "ablevinS"
+      vb.memory = 1024
+      vb.cpus = 1
+    end
+    control.vm.provision "shell", path: "scripts/install_k3s_controller.sh", env: {"SHARED_DIR" => shared_dir, "K3S_TOKEN" => k3s_token}
   end
 
-  config.vm.define "tchantroS" do |server|
-    server.vm.box = "bento/ubuntu-22.04"
-    server.vm.hostname = "tchantroS"
-    server.vm.network "private_network", ip: "192.168.56.110"
-    server.vm.provision "shell", path: "scripts/server.sh"
+  config.vm.define "ablevinSW" do |control|
+    control.vm.hostname = "ablevinSW"
+    control.vm.box = "debian/bookworm64"
+    control.vm.box_version = "12.20250126.1"
+    control.vm.network "private_network", ip: agent_ip
+    control.vm.provider "virtualbox" do |vb|
+      vb.name = "ablevinSW"
+      vb.memory = 1024
+      vb.cpus = 1
+    end
+    control.vm.provision "shell", path: "scripts/install_k3s_agent.sh", env: {"K3S_URL" => k3s_url, "SHARED_DIR" => shared_dir, "K3S_TOKEN" => k3s_token}
   end
 
-  config.vm.define "tchantroSW" do |serverW|
-    serverW.vm.box = "bento/ubuntu-22.04"
-    serverW.vm.hostname = "tchantroSW"
-    serverW.vm.network "private_network", ip: "192.168.56.111"
-    serverW.vm.provision "shell", path: "scripts/agent.sh"
-  end
-  #
-  # View the documentation for the provider you are using for more
-  # information on available options.
-
-  # Enable provisioning with a shell script. Additional provisioners such as
-  # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
-  # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y apache2
-  # SHELL
 end
