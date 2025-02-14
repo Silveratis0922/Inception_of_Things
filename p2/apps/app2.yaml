@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: app-two
-        image: nginx
+        image: karthequian/helloworld:latest
         ports:
         - containerPort: 80
 

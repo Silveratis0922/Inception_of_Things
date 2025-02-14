@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: app-three
-        image: nginx
+        image: nimak/helloworld
         ports:
         - containerPort: 80
 

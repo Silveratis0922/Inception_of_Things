@@ -24,13 +24,6 @@ Vagrant.configure("2") do |config|
     server.vm.network "private_network", ip: "192.168.56.110"
     server.vm.provision "shell", path: "scripts/server.sh"
   end
-
-  config.vm.define "tchantroSW" do |serverW|
-    serverW.vm.box = "bento/ubuntu-22.04"
-    serverW.vm.hostname = "tchantroSW"
-    serverW.vm.network "private_network", ip: "192.168.56.111"
-    serverW.vm.provision "shell", path: "scripts/agent.sh"
-  end
   #
   # View the documentation for the provider you are using for more
   # information on available options.
