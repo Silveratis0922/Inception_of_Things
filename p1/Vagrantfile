@@ -1,37 +1,94 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# A - CONF FILE :
+# # if using a config file, uncomment below lines
+require 'yaml'
+
+# Specify the path to the config file
+config_file = "conf/conf.yml"
+
+# Check if the config file exists; if not, raise an error
+unless File.exist?(config_file)
+  raise "Configuration file '#{config_file}' is missing! Exiting..."
+end
+
+# Load the configuration from conf.yaml
+config = YAML.load_file('conf/conf.yml')
+
+local_user = ENV['USER'] || config['local_user']
+user_server = "#{local_user}S"
+user_worker = "#{local_user}SW"
+
+vm_provider = config['vm_provider']
+vm_box = config['vm_box']
+vm_mem = config['vm_mem']
+vm_cpu_count = config['vm_cpu_count']
+vm_time_out = config['vm_time_out']
+
+server_ip = config['server_ip']
+server_script = config['server_script']
+
+worker_ip = config['worker_ip']
+worker_script = config['worker_script']
+
+kub_port = config['kub_port']
+kub_url = "https://#{server_ip}:#{kub_port}"
+
+
+# B - LOCAL VARIABLES :
+# # if using locally defined variables, uncomment below lines
+# local_user = ENV['USER'] || "vagrant"
+# user_server = "#{local_user}S"
+# user_worker = "#{local_user}SW"
+
+# vm_provider = "virtualbox"
+# vm_box = "bento/debian-12.6"
+# vm_mem = "1024"
+# vm_cpu_count = 1
+# vm_time_out = 600
+
+# server_ip = "192.168.56.110"
+# server_script = "scripts/server.sh"
+
+# worker_ip = "192.168.56.111"
+# worker_script = "scripts/agent.sh"
+
+# kub_port = "6443"
+# kub_url = "https://#{server_ip}:#{kub_port}"
+
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
-  config.vm.provider "virtualbox" do |vb|
+  config.vm.provider vm_provider do |vb|
   #   # Display the VirtualBox GUI when booting the machine
     vb.gui = false
     #Change le default machine folder de la commande "VBoxManage list systemproperties"
     #Pour remettre par defaut a 42 : VBoxManage setproperty machinefolder $HOME/Virtualbox\ Vms
-    vb.customize ["setproperty", "machinefolder", "#{ENV['HOME']}/"]
+    # vb.customize ["setproperty", "machinefolder", "#{ENV['HOME']}/"]
   
   #   # Customize the amount of memory on the VM:
-    vb.memory = "1024"
-    vb.cpus = 2
+    vb.memory = vm_mem
+    vb.cpus = vm_cpu_count
   end
   
-  config.vm.boot_timeout = 600
+  config.vm.boot_timeout = vm_time_out
 
-  config.vm.define "tchantroS" do |server|
-    server.vm.box = "bento/ubuntu-22.04"
-    server.vm.hostname = "tchantroS"
-    server.vm.network "private_network", ip: "192.168.56.110"
-    server.vm.provision "shell", path: "scripts/server.sh"
+  config.vm.define user_server do |server|
+    server.vm.box = vm_box
+    server.vm.hostname = user_server
+    server.vm.network "private_network", ip: server_ip
+    server.vm.provision "shell", privileged: true, path: server_script, env: { "SERVER_IP" => server_ip }
   end
 
-  config.vm.define "tchantroSW" do |serverW|
-    serverW.vm.box = "bento/ubuntu-22.04"
-    serverW.vm.hostname = "tchantroSW"
-    serverW.vm.network "private_network", ip: "192.168.56.111"
-    serverW.vm.provision "shell", path: "scripts/agent.sh"
+  config.vm.define user_worker do |worker|
+    worker.vm.box = vm_box
+    worker.vm.hostname = user_worker
+    worker.vm.network "private_network", ip: worker_ip
+    worker.vm.provision "shell", path: worker_script, env: { "WORKER_IP" => worker_ip, "KUB_URL" => kub_url }
   end
   #
   # View the documentation for the provider you are using for more
