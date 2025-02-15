@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: app-three
-        image: nimak/helloworld
+        image: karthequian/helloworld:latest
         ports:
         - containerPort: 80
 

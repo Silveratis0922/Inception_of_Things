@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: app-one
-        image: nginx
+        image: karthequian/helloworld:latest
         ports:
         - containerPort: 80
