@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-one-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-one
+  template:
+    metadata:
+      labels:
+        app: app-one
+    spec:
+      containers:
+      - name: app-one-container
+        image: nginx:latest
+        volumeMounts:
+        - name: app-one-html
+          mountPath: /usr/share/nginx/html
+        env:
+        - name: app-one-pod
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: app-one-node
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+      volumes:
+      - name: app-one-html
+        hostPath:
+          path: /vagrant/apps/app1
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-two-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app-two
+  template:
+    metadata:
+      labels:
+        app: app-two
+    spec:
+      containers:
+      - name: app-two-container
+        image: nginx:latest
+        volumeMounts:
+        - name: app-two-html
+          mountPath: /usr/share/nginx/html
+        env:
+        - name: app-two-pod
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: app-two-node
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+      volumes:
+      - name: app-two-html
+        hostPath:
+          path: /vagrant/apps/app2
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-three-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-three
+  template:
+    metadata:
+      labels:
+        app: app-three
+    spec:
+      containers:
+      - name: app-three-container
+        image: nginx:latest
+        volumeMounts:
+        - name: app-three-html
+          mountPath: /usr/share/nginx/html
+        env:
+        - name: app-three-pod
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: app-three-node
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+      volumes:
+      - name: app-three-html
+        hostPath:
+          path: /vagrant/apps/app3
+
+

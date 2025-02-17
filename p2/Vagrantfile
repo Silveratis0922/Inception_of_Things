@@ -1,0 +1,83 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# A - CONF FILE :
+# # if using a config file, uncomment below lines
+require 'yaml'
+
+# Specify the path to the config file
+config_file = "confs/vars.yml"
+
+# Check if the config file exists; if not, raise an error
+unless File.exist?(config_file)
+  raise "Configuration file '#{config_file}' is missing! Exiting..."
+end
+
+# Load the configuration from conf.yaml
+config = YAML.load_file('confs/vars.yml')
+
+local_user = ENV['USER'] || config['local_user']
+user_server = "#{local_user}S"
+
+vm_provider = config['vm_provider']
+vm_box = config['vm_box']
+vm_mem = config['vm_mem']
+vm_cpu_count = config['vm_cpu_count']
+vm_time_out = config['vm_time_out']
+
+server_ip = config['server_ip']
+server_script = config['server_script']
+
+
+# B - LOCAL VARIABLES :
+# # if using locally defined variables, uncomment below lines
+# local_user = ENV['USER'] || "vagrant"
+# user_server = "#{local_user}S"
+
+# vm_provider = "virtualbox"
+# vm_box = "bento/debian-12.6"
+# vm_mem = "1024"
+# vm_cpu_count = 1
+# vm_time_out = 600
+
+# server_ip = "192.168.56.110"
+# server_script = "scripts/server.sh"
+
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.vm.provider vm_provider do |vb|
+  #   # Display the VirtualBox GUI when booting the machine
+    vb.gui = false
+    #Change le default machine folder de la commande "VBoxManage list systemproperties"
+    #Pour remettre par defaut a 42 : VBoxManage setproperty machinefolder $HOME/Virtualbox\ Vms
+    # vb.customize ["setproperty", "machinefolder", "#{ENV['HOME']}/"]
+  
+  #   # Customize the amount of memory on the VM:
+    vb.memory = vm_mem
+    vb.cpus = vm_cpu_count
+  end
+  
+  config.vm.boot_timeout = vm_time_out
+
+  config.vm.define user_server do |server|
+    server.vm.box = vm_box
+    server.vm.hostname = user_server
+    server.vm.network "private_network", ip: server_ip
+    server.vm.provision "shell", privileged: true, path: server_script, env: { "SERVER_IP" => server_ip }
+  end
+
+  # View the documentation for the provider you are using for more
+  # information on available options.
+
+  # Enable provisioning with a shell script. Additional provisioners such as
+  # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
+  # documentation for more information about their specific syntax and use.
+  # config.vm.provision "shell", inline: <<-SHELL
+  #   apt-get update
+  #   apt-get install -y apache2
+  # SHELL
+end
