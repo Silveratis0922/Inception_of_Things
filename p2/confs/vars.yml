@@ -1,8 +1,8 @@
 local_user: vagrant
 vm_provider: virtualbox
 vm_box: bento/debian-12.6
-vm_mem: 1024
-vm_cpu_count: 1
+vm_mem: 2048
+vm_cpu_count: 2
 vm_time_out: 600
 server_ip: 192.168.56.110
 server_script: scripts/server.sh

@@ -1,2 +1,3 @@
 .vagrant
 token/
+k3s.yaml
