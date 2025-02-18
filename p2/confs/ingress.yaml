@@ -24,7 +24,7 @@ spec:
             name: app2-service
             port:
               number: 80
-  # - host: app3.com
+  # - host: app3.com # by commenting this, the below becomes default
   - http:
       paths:
       - path: /
