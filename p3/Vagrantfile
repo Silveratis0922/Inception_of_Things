@@ -19,10 +19,10 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "tchantroS" do |server|
-    server.vm.box = "bento/ubuntu-22.04"
+    server.vm.box = "bento/debian-12.6"
     server.vm.hostname = "tchantroS"
     server.vm.network "private_network", ip: "192.168.56.110"
-    #server.vm.provision "shell", path: "scripts/server.sh"
+    server.vm.provision "shell", path: "script.sh"
   end
   #
   # View the documentation for the provider you are using for more
