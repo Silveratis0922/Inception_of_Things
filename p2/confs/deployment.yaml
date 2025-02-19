@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app1-deployment
+  namespace: iot-p2
 spec:
   replicas: 1
   selector:
@@ -19,11 +20,11 @@ spec:
             - name: MESSAGE
               value: "This is app1"
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app2-deployment
+  namespace: iot-p2
 spec:
   replicas: 3
   selector:
@@ -41,11 +42,11 @@ spec:
             - name: MESSAGE
               value: "This is app2"
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app3-deployment
+  namespace: iot-p2
 spec:
   replicas: 1
   selector:
@@ -62,5 +63,3 @@ spec:
           env:
             - name: MESSAGE
               value: "This is app3"
-
-
