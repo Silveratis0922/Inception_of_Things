@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "alias k='sudo kubectl'" >> /home/vagrant/.bashrc
+echo "source <(k3d completion bash)" >> ~/.bashrc
 source ~/.bashrc
 
 export DEBIAN_FRONTEND=noninteractive
@@ -61,3 +62,14 @@ else
 fi
 
 
+# # install xfce as DE for GUI install
+# sudo apt-get update -qq
+# sudo apt-get install -yqq xfce4 xfce4-goodies lightdm
+# sudo systemctl set-default graphical.target
+# sudo systemctl enable lightdm
+
+# # Install GNOME as DE for GUI install
+# sudo apt-get update -qq
+# sudo apt-get install -yqq gnome-core gnome-terminal gdm3
+# sudo systemctl set-default graphical.target
+# sudo systemctl enable gdm3
