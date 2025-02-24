@@ -51,13 +51,9 @@ server_script = config['server_script']
 # you're doing.
 Vagrant.configure("2") do |config|
   config.vm.provider vm_provider do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
     vb.gui = vm_gui
-    #Change le default machine folder de la commande "VBoxManage list systemproperties"
-    #Pour remettre par defaut a 42 : VBoxManage setproperty machinefolder $HOME/Virtualbox\ Vms
-    # vb.customize ["setproperty", "machinefolder", "#{ENV['HOME']}/"]
-  
-  #   # Customize the amount of memory on the VM:
+    vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"] # Enable clipboard sharing
+    vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"] # Enable drag and drop
     vb.memory = vm_mem
     vb.cpus = vm_cpu_count
   end

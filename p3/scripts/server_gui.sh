@@ -9,7 +9,8 @@ export DEBIAN_FRONTEND=noninteractive
 sudo apt-get update -qq
 sudo apt-get upgrade -yqq
 sudo apt-get install -yqq curl wget vim net-tools git make apt-transport-https ca-certificates software-properties-common gpg gnupg2 lsb-release
-
+# packages for GUI
+sudo apt-get install -yqq xfce4 xfce4-goodies xorg dbus-x11
 
 
 # Check and install Docker
@@ -61,16 +62,8 @@ else
   sudo chmod +x /usr/local/bin/kubectl
 fi
 
-
-sudo apt-get update
-
-sudo apt-get install -y xfce4 xfce4-goodies xorg dbus-x11
-
+# activate GUI
 echo "VBoxClient-all" >> ~/.xsessionrc
-
-
-
-
 sudo systemctl set-default graphical.target
 sudo reboot
 
