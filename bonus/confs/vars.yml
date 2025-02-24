@@ -4,7 +4,6 @@ vm_box: bento/debian-12.6
 vm_mem: 2048
 vm_cpu_count: 2
 vm_time_out: 600
-vm_gui: false
 server_ip: 192.168.56.110
 server_script: scripts/server.sh
 kub_port: 6443

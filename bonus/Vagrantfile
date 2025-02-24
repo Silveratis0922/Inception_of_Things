@@ -24,7 +24,6 @@ vm_box = config['vm_box']
 vm_mem = config['vm_mem']
 vm_cpu_count = config['vm_cpu_count']
 vm_time_out = config['vm_time_out']
-vm_gui = config['vm_gui']
 
 server_ip = config['server_ip']
 server_script = config['server_script']
@@ -52,7 +51,7 @@ server_script = config['server_script']
 Vagrant.configure("2") do |config|
   config.vm.provider vm_provider do |vb|
   #   # Display the VirtualBox GUI when booting the machine
-    vb.gui = vm_gui
+    vb.gui = false
     #Change le default machine folder de la commande "VBoxManage list systemproperties"
     #Pour remettre par defaut a 42 : VBoxManage setproperty machinefolder $HOME/Virtualbox\ Vms
     # vb.customize ["setproperty", "machinefolder", "#{ENV['HOME']}/"]
