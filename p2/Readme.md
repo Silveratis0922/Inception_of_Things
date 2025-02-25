@@ -23,7 +23,7 @@
 **Description des fichiers** :
 - **Vagrantfile** : Définit la configuration de la machine virtuelle.
 - **conf/namespace.yaml** : Déclare le namespace dans lequel les ressources seront déployées.
-- **conf/deployment.yaml** : Contient les spécifications du déploiement des containers, avec les images Docker et les ressources allouées.
+- **conf/deployment.yaml** : Contient les spécifications du déploiement des containers, avec les images et les ressources allouées.
 - **conf/service.yaml** : Crée un service pour exposer les pods du déploiement.
 - **conf/ingress.yaml** : Crée un Ingress pour gérer l'accès externe au service via un URL.
 - **conf/vars.yaml** : Contient les variables de configuration, telles que les noms des services et des images.
@@ -31,24 +31,41 @@
 ## 📄 Détails des fichiers
 
 1️⃣ **Vagrantfile**  
-Le fichier Vagrantfile définit la configuration des machines virtuelles qui seront utilisées pour héberger le cluster Kubernetes. Ce fichier spécifie la configuration de chaque machine (serveur K3s et agent K3s), les paramètres réseau, ainsi que les ressources (CPU, mémoire). 
+- Définit la configuration de la machine virtuelle utilisée pour héberger le cluster Kubernetes.  
+- Configure le serveur K3s, les paramètres réseau et les ressources allouées (CPU, mémoire).  
+- Inclut les scripts nécessaires pour provisionner et configurer le serveur au démarrage.   
 
-Il inclut également les scripts nécessaires pour provisionner et configurer le cluster au démarrage des machines.
+### 2️⃣ **conf/namespace.yaml**  
+- Définit un **namespace Kubernetes**.  
+- Permet de séparer les ressources d’un projet des autres projets dans le même cluster.  
+- Facilite l’organisation et l’isolation des ressources au sein du cluster.  
 
-2️⃣ **conf/namespace.yaml**  
-Le fichier namespace.yaml crée un namespace Kubernetes. Il est essentiel pour séparer les ressources d'un projet des autres projets dans le même cluster.
+### 3️⃣ **conf/deployment.yaml**  
+- Définit le déploiement des applications dans Kubernetes.   
+- Spécifie le **nombre de réplicas** pour assurer la disponibilité et la scalabilité.  
+- Détermine les **ressources allouées** aux containers (CPU et mémoire).  
 
-3️⃣ **conf/deployment.yaml**  
-Ce fichier définit le déploiement des applications. Il contient la configuration pour déployer les containers Docker dans le cluster, avec des informations sur les réplicas, les images utilisées, ainsi que les ressources (CPU et mémoire).
+### 4️⃣ **conf/service.yaml**  
+- Définit un **service Kubernetes** qui expose les applications au sein du cluster.  
+- Permet la communication entre les pods et d’autres ressources du cluster.   
 
-4️⃣ **conf/service.yaml**  
-Le fichier service.yaml définit un service Kubernetes qui permet d'exposer le déploiement aux autres ressources dans le cluster. Ce service peut également être configuré pour permettre l'accès externe, en fonction de la configuration d'Ingress.
+### 5️⃣ **conf/ingress.yaml**  
+- Crée un **Ingress** pour gérer l’accès externe au cluster via une URL.  
+- Redirige les requêtes HTTP vers le service approprié.  
+- Permet un accès simplifié aux applications sans configurer manuellement les IPs et ports.  
 
-5️⃣ **conf/ingress.yaml**  
-Ce fichier crée un Ingress pour gérer l'accès externe au cluster via une URL. Il redirige les requêtes HTTP vers le service approprié, facilitant ainsi l'accès aux applications sans nécessiter de configuration manuelle des IPs et des ports.
+### 6️⃣ **conf/vars.yaml**  
+- Contient des **variables de configuration** ajustables selon les besoins. 
+- Permet d’adapter le déploiement aux exigences spécifiques du projet.  
 
-6️⃣ **conf/vars.yaml**  
-Le fichier vars.yaml contient les variables que tu peux ajuster selon tes besoins. Par exemple, les noms d'image Docker, les ressources allouées aux containers, et les configurations spécifiques du déploiement.
+### 7️⃣ **scripts/server.sh**  
+- Exécute les commandes d’installation et de configuration du serveur Kubernetes (K3s).  
+- Installe les paquets nécessaires : `curl`, `vim`, `net-tools`.  
+- Configure l’alias `k` pour `kubectl` afin de faciliter son utilisation.  
+- Installe K3s en mode serveur avec une configuration spécifique (`flannel-iface`, `node-ip`).  
+- Génère un **token d’authentification** permettant aux agents de rejoindre le cluster.  
+- Ajoute des entrées dans `/etc/hosts` pour permettre la résolution des noms de domaine des applications.  
+- Applique les fichiers de configuration Kubernetes (`namespace.yaml`, `deployment.yaml`, `service.yaml`, `ingress.yaml`).  
 
 ## ⚙️ Installation
 
@@ -98,5 +115,3 @@ vagrant up
 ```sh
 vagrant destroy -f
 ```
-
-🎉 Ton cluster K3s avec l'application déployée est maintenant opérationnel !
