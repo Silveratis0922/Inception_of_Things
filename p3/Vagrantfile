@@ -28,6 +28,7 @@ vm_gui = config['vm_gui']
 
 server_ip = config['server_ip']
 server_script = config['server_script']
+kube_script = config['kube_script']
 
 
 # B - LOCAL VARIABLES :
@@ -64,8 +65,11 @@ Vagrant.configure("2") do |config|
     server.vm.box = vm_box
     server.vm.hostname = user_server
     server.vm.network "private_network", ip: server_ip
-    server.vm.provision "shell", privileged: true, path: server_script, env: { "SERVER_IP" => server_ip }
-  end
+    config.vm.network "forwarded_port", guest: 8080, host: 8080
+    server.vm.provision "shell", privileged: true, path: server_script, env: { "SERVER_IP" => server_ip }, before: :all
+    server.vm.provision "shell", privileged: true, path: kube_script
+
+end
 
   # View the documentation for the provider you are using for more
   # information on available options.

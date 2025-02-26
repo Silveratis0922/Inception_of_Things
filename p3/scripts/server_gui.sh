@@ -1,24 +1,50 @@
 #!/bin/bash
 
-echo "alias k='sudo kubectl'" >> /home/vagrant/.bashrc
-echo "source <(k3d completion bash)" >> ~/.bashrc
-source ~/.bashrc
-
 export DEBIAN_FRONTEND=noninteractive
 
 sudo apt-get update -qq
 sudo apt-get upgrade -yqq
-sudo apt-get install -yqq curl wget vim net-tools git make apt-transport-https ca-certificates software-properties-common gpg gnupg2 lsb-release
+
+
+# sudo apt-get install -yqq curl wget vim net-tools git make apt-transport-https ca-certificates software-properties-common gpg gnupg2 lsb-release
+
+# List of packages to be installed
+packages=(
+  curl
+  wget
+  vim
+  net-tools
+  git
+  make
+  apt-transport-https
+  ca-certificates
+  software-properties-common
+  gpg
+  gnupg2
+  lsb-release
+)
+
+# Loop through the list of packages and install if not already installed
+for package in "${packages[@]}"; do
+  if ! dpkg-query -W -f='${Status}' $package 2>/dev/null | grep -q "ok installed"; then
+    echo "\033[38;5;214mInstalling $package...\033[0m"
+    sudo apt-get install -yqq $package
+  else
+    echo "\033[38;5;214m$package is already installed.\033[0m"
+  fi
+done
+
 # packages for GUI
 sudo apt-get install -yqq xfce4 xfce4-goodies xorg dbus-x11
+sudo apt-get install -yqq firefox-esr
 
 
 # Check and install Docker
 if docker -v > /dev/null 2>&1; then
-  echo "Docker is already installed"
+  echo -e "\033[38;5;214mDocker is already installed\033[0m"
   docker -v
 else
-  echo "Installing Docker"
+  echo -e "\033[38;5;214mInstalling Docker\033[0m"
   # remove current docker to avoid conflict
   for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
   # Add Docker's official GPG key:
@@ -43,27 +69,31 @@ fi
 
 # Check and install k3d
 if k3d --version > /dev/null 2>&1; then
-  echo "k3d is already installed"
+  echo -e "\033[38;5;214mk3d is already installed\033[0m"
   k3d --version
 else
-  echo "Installing k3d"
+  echo -e "\033[38;5;214mInstalling k3d\033[0m"
   wget -q -O - https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
 fi
 
 
 # Check and install kubectl
 if kubectl version > /dev/null 2>&1; then
-  echo "kubectl is already installed"
+  echo -e "\033[38;5;214mkubectl is already installed\033[0m"
   kubectl version
 else
-  echo "Installing kubectl"
+  echo -e "\033[38;5;214mInstalling kubectl\033[0m"
   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
   sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
   sudo chmod +x /usr/local/bin/kubectl
 fi
 
+echo "alias k='sudo kubectl'" >> /home/vagrant/.bashrc
+echo "source <(k3d completion bash)" >> ~/.bashrc
+source ~/.bashrc
+
 # activate GUI
 echo "VBoxClient-all" >> ~/.xsessionrc
 sudo systemctl set-default graphical.target
-sudo reboot
+# sudo reboot
 
