@@ -1,7 +1,7 @@
 # 📌 P2 : Déploiement d'Applications avec K3s
 
 ## 🚀 Prérequis
-- [Vagrant](https://www.vagrantup.com/)
+- [Vagrant](https://www.vagrantup.com/) (2.4.1)
 - [VirtualBox](https://www.virtualbox.org/) (7.0.18 en fonction de la box utilisée)
 
 ## 📂 Structure du projet
@@ -23,7 +23,7 @@
 **Description des fichiers** :
 - **Vagrantfile** : Définit la configuration de la machine virtuelle.
 - **conf/namespace.yaml** : Déclare le namespace dans lequel les ressources seront déployées.
-- **conf/deployment.yaml** : Contient les spécifications du déploiement des containers, avec les images et les ressources allouées.
+- **conf/deployment.yaml** : Contient les spécifications du déploiement des containers, avec les images Docker et les ressources allouées.
 - **conf/service.yaml** : Crée un service pour exposer les pods du déploiement.
 - **conf/ingress.yaml** : Crée un Ingress pour gérer l'accès externe au service via un URL.
 - **conf/vars.yaml** : Contient les variables de configuration, telles que les noms des services et des images.
@@ -42,8 +42,7 @@
 
 ### 3️⃣ **conf/deployment.yaml**  
 - Définit le déploiement des applications dans Kubernetes.   
-- Spécifie le **nombre de réplicas** pour assurer la disponibilité et la scalabilité.  
-- Détermine les **ressources allouées** aux containers (CPU et mémoire).  
+- Spécifie le **nombre de réplicas** pour assurer la disponibilité et la scalabilité. 
 
 ### 4️⃣ **conf/service.yaml**  
 - Définit un **service Kubernetes** qui expose les applications au sein du cluster.  
@@ -82,7 +81,7 @@ cd <NOM_DU_REPO>
 vagrant up
 ```
 
-Cela va créer et démarrer deux machines virtuelles (serveur et agent).
+Cela va créer et démarrer la machine virtuelle.
 
 3️⃣ **Accéder au serveur K3s**  
 
@@ -103,7 +102,7 @@ Cela te permet de voir si les pods sont correctement déployés et si les servic
 
 🔹 **Arrêter les machines**  
 ```sh
-vagrant halt
+vagrant halt -f
 ```
 
 🔹 **Redémarrer les machines**  
