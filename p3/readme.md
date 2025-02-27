@@ -39,9 +39,9 @@ https://hub.docker.com/r/wil42/playground
 cat deployment.yaml | grep v1
 cat deployment.yaml | grep v2
 
-curl http://localhost:8888/
+curl http://localhost:8888/ -w "\n"
 
-sed -i 's/wil42\/playground\:v1/wil42\/playground\:v2/g' deploy.yml
+sed -i 's/wil42\/playground\:v1/wil42\/playground\:v2/g' deployment.yaml
 
-g up "v2" # git add+commit+push
+gacp up "v2" # git add+commit+push
 

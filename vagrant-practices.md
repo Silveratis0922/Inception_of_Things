@@ -61,7 +61,7 @@ Modern Vagrantfile practices focus on **modularity**, **reusability**, **clarity
 
      # Use Ansible for provisioning
      config.vm.provision "ansible" do |ansible|
-       ansible.playbook = "playbook.yml"
+       ansible.playbook = "playbook.yaml"
      end
    end
    ```

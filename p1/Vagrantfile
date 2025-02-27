@@ -6,7 +6,7 @@
 require 'yaml'
 
 # Specify the path to the config file
-config_file = "conf/conf.yml"
+config_file = "conf/conf.yaml"
 
 # Check if the config file exists; if not, raise an error
 unless File.exist?(config_file)
@@ -14,7 +14,7 @@ unless File.exist?(config_file)
 end
 
 # Load the configuration from conf.yaml
-config = YAML.load_file('conf/conf.yml')
+config = YAML.load_file('conf/conf.yaml')
 
 local_user = ENV['USER'] || config['local_user']
 user_server = "#{local_user}S"
