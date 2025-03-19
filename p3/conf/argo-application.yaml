@@ -6,7 +6,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: "https://github.com/IcarioX3/ablevin-p3"
+    repoURL: "https://github.com/cloosafm/iot-conf_acloos"
+    # repoURL: "https://github.com/IcarioX3/ablevin-p3"
     targetRevision: HEAD
     path: .
   destination:
