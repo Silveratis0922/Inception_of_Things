@@ -15,6 +15,7 @@ helm repo add gitlab https://charts.gitlab.io/
 helm repo update
 
 # Installation de GitLab en mode minimal
+echo "Installing Gitlab..."
 helm upgrade --install gitlab gitlab/gitlab \
   --namespace $NAMESPACE_GITLAB \
   --set global.hosts.domain="local" \

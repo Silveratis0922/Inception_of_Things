@@ -38,7 +38,7 @@ fi
 
 # Connect to Argo CD and change default password
 echo "Connection to Argo CD..."
-kubectl port-forward svc/argocd-server -n $NAMESPACE_ARGOCD 8080:443 &
+kubectl port-forward svc/argocd-server --address 0.0.0.0 -n $NAMESPACE_ARGOCD 8080:443 &
 sleep 2
 argocd login localhost:8080 --username admin --password $ARGOCD_PWD --insecure
 argocd account update-password --account admin --current-password $ARGOCD_PWD --new-password "admin123"
